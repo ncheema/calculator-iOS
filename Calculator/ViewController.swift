@@ -13,10 +13,11 @@ import UIKit
 
 class ViewController: UIViewController {
     var userIsInTheMiddle = false   //track if user previously typed a #
- //   var operandStack = Array<Double>()  //store the digits
+ 
     //outlet conenection to dispaly by using a pointer
     @IBOutlet weak var display: UILabel!
     
+    //stack history
     @IBOutlet weak var displayHistory: UILabel!
     
     var brain = CalculatorBrain()
@@ -62,7 +63,7 @@ class ViewController: UIViewController {
         }
 
     }
-    /* clear all items from stack */
+
      
     
     @IBAction func enter() {
