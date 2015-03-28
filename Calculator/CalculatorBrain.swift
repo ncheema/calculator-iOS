@@ -8,23 +8,42 @@
 /*Model*/
 import Foundation
 class CalculatorBrain {
-   private enum Op {
+   //implements printable protocol
+    private enum Op: Printable {
         case Operand(Double)
         case UnaryOperation(String, Double -> Double)
         case BinaryOperation(String, (Double, Double) -> Double)
+    
+    //read only computed property
+        var description: String {
+            get {
+                switch self {
+                case .Operand(let operand):
+                    return "\(operand)"
+                case .UnaryOperation(let opSymbol, _):
+                    return opSymbol
+                case .BinaryOperation(let opSymbol, _):
+                    return opSymbol
+                }
+                
+            }
+        }
     }
    private var opStack = [Op]()    //array of type op
    private var knownOps = [String : Op]()    //dictornory of <String,Op>
     private let clr = "C"
     init() {    //intializer
-        knownOps["/"] = Op.BinaryOperation("/") {$1 * $0}
-        knownOps["−"] = Op.BinaryOperation("−") {$1 - $0}
-        knownOps["x"] = Op.BinaryOperation("x", *)
-        knownOps["+"] = Op.BinaryOperation("+",+)
-        knownOps["√"] = Op.UnaryOperation("√",sqrt)
-        knownOps["sin"] = Op.UnaryOperation("sin",sin)
-        knownOps["cos"] = Op.UnaryOperation("cos",cos)
-        knownOps["tan"] = Op.UnaryOperation("tan",tan)
+        func learnOp(op: Op){
+            knownOps[op.description] = op
+        }
+        learnOp(Op.BinaryOperation("/") {$1 * $0})
+        learnOp(Op.BinaryOperation("−") {$1 - $0})
+        learnOp(Op.BinaryOperation("x", *))
+        learnOp(Op.BinaryOperation("+",+))
+        learnOp(Op.UnaryOperation("√",sqrt))
+        learnOp(Op.UnaryOperation("sin",sin))
+        learnOp(Op.UnaryOperation("cos",cos))
+        learnOp(Op.UnaryOperation("tan",tan))
         
    //     knownOps["c"] = Op.UnaryOperation("c", clrStack)
         
@@ -66,6 +85,7 @@ class CalculatorBrain {
     }
     func evaluate() -> Double? {
         let (result, remainder) = evaluate(opStack)
+        println("\(opStack) = \(result) with \(remainder)")
         return result
     }
     
